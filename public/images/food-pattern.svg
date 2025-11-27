@@ -1,0 +1,39 @@
+<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="foodPattern" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+      <!-- Light background -->
+      <rect width="200" height="200" fill="#f0fdf4"/>
+
+      <!-- Food icons as shapes -->
+      <!-- Apple -->
+      <circle cx="40" cy="40" r="15" fill="#dcfce7" opacity="0.3"/>
+      <circle cx="40" cy="40" r="10" fill="#86efac" opacity="0.2"/>
+
+      <!-- Leaf/Vegetable -->
+      <ellipse cx="140" cy="60" rx="12" ry="20" fill="#d1fae5" opacity="0.3"/>
+      <ellipse cx="140" cy="60" rx="8" ry="15" fill="#6ee7b7" opacity="0.2"/>
+
+      <!-- Carrot -->
+      <path d="M 60 140 L 70 160 L 50 160 Z" fill="#fcd34d" opacity="0.2"/>
+      <rect x="58" y="135" width="4" height="8" fill="#86efac" opacity="0.3"/>
+
+      <!-- Avocado -->
+      <ellipse cx="160" cy="150" rx="15" ry="18" fill="#86efac" opacity="0.3"/>
+      <circle cx="160" cy="155" r="6" fill="#fef3c7" opacity="0.4"/>
+
+      <!-- Broccoli -->
+      <circle cx="100" cy="100" r="8" fill="#86efac" opacity="0.25"/>
+      <circle cx="95" cy="105" r="6" fill="#86efac" opacity="0.25"/>
+      <circle cx="105" cy="105" r="6" fill="#86efac" opacity="0.25"/>
+      <rect x="98" y="108" width="4" height="12" fill="#6ee7b7" opacity="0.2"/>
+
+      <!-- Dots pattern -->
+      <circle cx="30" cy="120" r="3" fill="#10b981" opacity="0.1"/>
+      <circle cx="170" cy="30" r="3" fill="#10b981" opacity="0.1"/>
+      <circle cx="120" cy="180" r="3" fill="#10b981" opacity="0.1"/>
+      <circle cx="80" cy="20" r="3" fill="#10b981" opacity="0.1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#foodPattern)"/>
+</svg>
