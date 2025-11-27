@@ -17,16 +17,32 @@ const IngredientsInput = ({ onAnalyze }) => {
       const parsed = parseIngredient(trimmedLine);
 
       if (!parsed) {
-        validationErrors.push({
-          line: index + 1,
-          text: trimmedLine,
-        });
+        // Check if it's just an ingredient name without quantity
+        const lowerLine = trimmedLine.toLowerCase();
+        const isJustIngredientName = Object.keys(nutritionDatabase).some(
+          ingredient => lowerLine === ingredient || lowerLine.includes(ingredient)
+        );
+
+        if (isJustIngredientName) {
+          validationErrors.push({
+            line: index + 1,
+            text: trimmedLine,
+            errorType: 'missing_quantity'
+          });
+        } else {
+          validationErrors.push({
+            line: index + 1,
+            text: trimmedLine,
+            errorType: 'invalid_format'
+          });
+        }
       } else {
         const ingredient = parsed.ingredient;
         if (!nutritionDatabase[ingredient]) {
           validationErrors.push({
             line: index + 1,
             text: trimmedLine,
+            errorType: 'not_found'
           });
         }
       }
@@ -124,10 +140,10 @@ const IngredientsInput = ({ onAnalyze }) => {
 
               {/* Error Messages */}
               {showErrors && errors.length > 0 && (
-                <div className="mt-4 p-5 bg-red-50 border-2 border-red-300 rounded-2xl">
-                  <div className="flex items-center gap-3">
+                <div className="mt-4 p-5 bg-red-50 border-2 border-red-300 rounded-2xl space-y-3">
+                  <div className="flex items-start gap-3">
                     <svg
-                      className="w-6 h-6 text-red-600 flex-shrink-0"
+                      className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -139,9 +155,33 @@ const IngredientsInput = ({ onAnalyze }) => {
                         d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    <p className="text-base font-semibold text-red-700">
-                      Please Type one ingredient per line to make analysis
-                    </p>
+                    <div className="flex-1">
+                      <p className="text-base font-bold text-red-800 mb-3">
+                        Please fix the following errors:
+                      </p>
+                      <div className="space-y-2">
+                        {errors.map((err, idx) => {
+                          let errorMessage = '';
+
+                          if (err.errorType === 'missing_quantity') {
+                            errorMessage = `Missing quantity! Please add amount like: "100g ${err.text}", "1 cup ${err.text}", or "1 tbsp ${err.text}"`;
+                          } else if (err.errorType === 'not_found') {
+                            errorMessage = `Ingredient not found in database. Please check spelling or use a different ingredient.`;
+                          } else {
+                            errorMessage = `Invalid format! Use examples: "100g chicken", "1 cup rice", "1 tbsp olive oil"`;
+                          }
+
+                          return (
+                            <div key={idx} className="bg-white p-3 rounded-lg border-l-4 border-red-500">
+                              <p className="text-sm font-semibold text-gray-800 mb-1">
+                                Line {err.line}: "{err.text}"
+                              </p>
+                              <p className="text-sm text-red-700">{errorMessage}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
