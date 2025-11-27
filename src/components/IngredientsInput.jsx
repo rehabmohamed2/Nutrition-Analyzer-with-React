@@ -14,11 +14,26 @@ const IngredientsInput = ({ onAnalyze }) => {
       const trimmedLine = line.trim();
       if (!trimmedLine) return;
 
+      // Check if multiple ingredients on one line (contains "and", "," or multiple ingredient names)
+      const lowerLine = trimmedLine.toLowerCase();
+      const hasMultipleIngredients =
+        lowerLine.includes(' and ') ||
+        lowerLine.includes(',') ||
+        (lowerLine.match(/\d+g|\d+\s*cup|\d+\s*tbsp/g) || []).length > 1;
+
+      if (hasMultipleIngredients) {
+        validationErrors.push({
+          line: index + 1,
+          text: trimmedLine,
+          errorType: 'multiple_ingredients'
+        });
+        return;
+      }
+
       const parsed = parseIngredient(trimmedLine);
 
       if (!parsed) {
         // Check if it's just an ingredient name without quantity
-        const lowerLine = trimmedLine.toLowerCase();
         const isJustIngredientName = Object.keys(nutritionDatabase).some(
           ingredient => lowerLine === ingredient || lowerLine.includes(ingredient)
         );
@@ -163,7 +178,9 @@ const IngredientsInput = ({ onAnalyze }) => {
                         {errors.map((err, idx) => {
                           let errorMessage = '';
 
-                          if (err.errorType === 'missing_quantity') {
+                          if (err.errorType === 'multiple_ingredients') {
+                            errorMessage = `Multiple ingredients detected! Please enter ONE ingredient per line. Separate them into different lines.`;
+                          } else if (err.errorType === 'missing_quantity') {
                             errorMessage = `Missing quantity! Please add amount like: "100g ${err.text}", "1 cup ${err.text}", or "1 tbsp ${err.text}"`;
                           } else if (err.errorType === 'not_found') {
                             errorMessage = `Ingredient not found in database. Please check spelling or use a different ingredient.`;
